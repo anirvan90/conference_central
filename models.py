@@ -136,6 +136,6 @@ class SessionForm(messages.Message):
     duration             = messages.StringField(5)  
     typeOfSession        = messages.StringField(6)
     date                 = messages.StringField(7)
-    startTime            = messages.IntegerField(8, variant=messages.Variant.INT32)  
+    startTime            = messages.IntegerField(8)  
     websafeConferenceKey = messages.StringField(9)
     organizerDisplayName = messages.StringField(10)  
