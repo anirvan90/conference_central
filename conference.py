@@ -455,6 +455,22 @@ class ConferenceApi(remote.Service):
         return self._conferenceRegistration(request, reg=False)
 
 # - - - - Sessions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    def _copySessionToForm(self, session):
+        """Copy relevant fields from Session to SessionForm"""
+        sf = SessionForm()
+        for field in sf.all_fields():
+            if hasattr(session, field.name):
+                # Convert date to date string and copy others
+                if field.name.endswith('Date'):
+                    setattr(sf, field.name, str(getattr(session, field.name)))
+                else:
+                    setattr(sf, field.name, getattr(session, field.name))
+            elif field.name == "websafeKey":
+                setattr(sf, field.name, session.key.urlsafe())
+            if displayName:
+                setattr(cf, 'organizerDisplayName', displayName)
+            sf.check_initialized()
+            return sf
 
     def _createSessionObject(self, request):
         """Create or Update Session object. Return SessionForm or request"""
@@ -497,10 +513,12 @@ class ConferenceApi(remote.Service):
         s_key = ndb.Key(Session, s_id, parent=p_key)
         data['key'] = s_key
         data['organizerUserId'] = user_id
+        del data['websafeConferenceKey']
 
         # Create session
+        print data    
         Session(**data).put()
-
+        
         return request
 
     @endpoints.method(SessionForm, SessionForm,

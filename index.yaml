@@ -20,10 +20,10 @@ indexes:
 
 - kind: Conference
   properties:
-  - name: seatsAvailable
-  - name: name
+  - name: maxAttendees
+  - name: name+
 
 - kind: Conference
   properties:
-  - name: maxAttendees
-  - name: name+
+  - name: seatsAvailable
+  - name: name
